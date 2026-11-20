@@ -35,6 +35,32 @@ const gridHelper = new THREE.GridHelper(20, 20, 0x888888, 0x444444);
 gridHelper.position.y = -0.99; 
 scene.add(gridHelper);
 
+// эээ ну это базированная база
+const baseGeometry = new THREE.CylinderGeometry(0.5, 0.5, 1, 32);
+const baseMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 }); 
+const playerBase = new THREE.Mesh(baseGeometry, baseMaterial);
+playerBase.position.set(0, 0.5, 5); 
+scene.add(playerBase);
+
+// Ствол (другой ствол, оружие)
+const barrelGeometry = new THREE.BoxGeometry(0.2, 0.2, 1.5);
+const barrelMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 }); // Серый
+const playerBarrel = new THREE.Mesh(barrelGeometry, barrelMaterial);
+playerBarrel.position.set(0, 1, 4.25); 
+scene.add(playerBarrel);
+
+// враги туту спавнит
+const spawnGeometry = new THREE.PlaneGeometry(8, 8);
+const spawnMaterial = new THREE.MeshStandardMaterial({ 
+  color: 0xff0000, 
+  transparent: true, 
+  opacity: 0.3 // Полупрозрачный красный
+});
+const spawnPoint = new THREE.Mesh(spawnGeometry, spawnMaterial);
+spawnPoint.rotation.x = -Math.PI / 2; 
+spawnPoint.position.set(0, 0.01, -15); 
+scene.add(spawnPoint);
+
 function animate() {
   requestAnimationFrame(animate);
 
