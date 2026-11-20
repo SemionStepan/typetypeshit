@@ -71,8 +71,10 @@ scene.add(enemy);
 function animate() {
   requestAnimationFrame(animate);
 
-  // враг двигается (увеличиваем Z, так как игрок на Z=5)
-  enemy.position.z += 0.02; 
+// Если враг еще не дошел до базы (база на Z=5, остановим его на Z=2)
+if (enemy.position.z < 2) {
+  enemy.position.z += 0.02;
+}
 
   renderer.render(scene, camera);
 }
