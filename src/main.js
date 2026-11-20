@@ -61,8 +61,18 @@ spawnPoint.rotation.x = -Math.PI / 2;
 spawnPoint.position.set(0, 0.01, -15); 
 scene.add(spawnPoint);
 
+// враг
+const enemyGeometry = new THREE.BoxGeometry(1, 1, 1);
+const enemyMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 }); // Красный
+const enemy = new THREE.Mesh(enemyGeometry, enemyMaterial);
+enemy.position.set(0, 0.5, -15); // Ставим ровно в точку спавна
+scene.add(enemy);
+
 function animate() {
   requestAnimationFrame(animate);
+
+  // враг двигается (увеличиваем Z, так как игрок на Z=5)
+  enemy.position.z += 0.02; 
 
   renderer.render(scene, camera);
 }
