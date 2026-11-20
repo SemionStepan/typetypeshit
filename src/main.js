@@ -30,7 +30,8 @@ directionalLight.position.set(5, 5, 5);
 scene.add(directionalLight);
 
 const floorGeometry = new THREE.PlaneGeometry(20, 20);
-const floorMaterial = new THREE.MeshStandardMaterial({ 
+const floorMaterial = new THREE.MeshStandardMaterial(
+{ 
   color: 0x222222, 
   side: THREE.DoubleSide 
 });
@@ -59,7 +60,8 @@ scene.add(playerBarrel);
 
 // враги туту спавнит
 const spawnGeometry = new THREE.PlaneGeometry(8, 8);
-const spawnMaterial = new THREE.MeshStandardMaterial({ 
+const spawnMaterial = new THREE.MeshStandardMaterial(
+{ 
   color: 0xff0000, 
   transparent: true, 
   opacity: 0.3 
@@ -77,7 +79,8 @@ const wordList = ['кот', 'дом', 'лес', 'сон', 'мир', 'лук', '�
 const enemyGeometry = new THREE.BoxGeometry(1, 1, 1);
 const enemyMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
 
-for (let i = 0; i < POOL_SIZE; i++) {
+for (let i = 0; i < POOL_SIZE; i++) 
+{
   const mesh = new THREE.Mesh(enemyGeometry, enemyMaterial);
   
   const wordDiv = document.createElement('div');
@@ -93,7 +96,8 @@ for (let i = 0; i < POOL_SIZE; i++) {
   mesh.visible = false; 
   scene.add(mesh);
   
-  enemies.push({
+  enemies.push(
+  {
     mesh: mesh,
     wordDiv: wordDiv,
     word: '',
@@ -102,7 +106,8 @@ for (let i = 0; i < POOL_SIZE; i++) {
 }
 
 // Функция спавна врага
-function spawnEnemy() {
+function spawnEnemy() 
+{
   const enemyData = enemies.find(e => !e.isActive);
   if (!enemyData) return; 
 
@@ -129,13 +134,16 @@ inputDisplay.style.fontFamily = 'monospace';
 inputDisplay.style.textShadow = '2px 2px 4px rgba(0,0,0,0.8)';
 document.body.appendChild(inputDisplay);
 
-function animate() {
+function animate() 
+{ // анимация анимирует
   requestAnimationFrame(animate);
-  
-  // Двигаем всех активных врагов
-  enemies.forEach(enemyData => {
-    if (enemyData.isActive) {
-      if (enemyData.mesh.position.z < 2) {
+ 
+  enemies.forEach(enemyData => 
+  {
+    if (enemyData.isActive) 
+    {
+      if (enemyData.mesh.position.z < 2) 
+      {
         enemyData.mesh.position.z += 0.02;
       }
     }
@@ -149,19 +157,24 @@ animate();
 
 let currentInput = '';
 
-window.addEventListener('keydown', (event) => {
-  if (event.key.length === 1) {
+window.addEventListener('keydown', (event) => 
+{
+  if (event.key.length === 1) 
+  {
     currentInput += event.key; 
   } 
-  else if (event.key === 'Backspace') {
+  else if (event.key === 'Backspace') 
+  {
     currentInput = currentInput.slice(0, -1); 
   }
 
   inputDisplay.textContent = currentInput;
 
-  // Проверяем всех активных врагов
-  enemies.forEach(enemyData => {
-    if (enemyData.isActive && currentInput === enemyData.word) {
+  // сколько активных
+  enemies.forEach(enemyData => 
+  {
+    if (enemyData.isActive && currentInput === enemyData.word) 
+    {
       console.log('БАХ! Уничтожено: ' + enemyData.word);
       
       // Прячем врага обратно в пул
