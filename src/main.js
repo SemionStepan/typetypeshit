@@ -1,9 +1,16 @@
 import * as THREE from 'three';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
 const scene = new THREE.Scene();
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.querySelector('#app').appendChild(renderer.domElement);
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.setSize(window.innerWidth, window.innerHeight);
+labelRenderer.domElement.style.position = 'absolute';
+labelRenderer.domElement.style.top = '0px';
+labelRenderer.domElement.style.pointerEvents = 'none'; // Важно: чтобы текст не мешал кликать!(из гайда хз как работает)
+document.querySelector('#app').appendChild(labelRenderer.domElement);
 
 const camera = new THREE.PerspectiveCamera(
   75,
@@ -67,14 +74,24 @@ const enemyMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 }); // К
 const enemy = new THREE.Mesh(enemyGeometry, enemyMaterial);
 enemy.position.set(0, 0.5, -15); // Ставим ровно в точку спавна
 scene.add(enemy);
+// Создаем HTML-элемент для текста
+const wordDiv = document.createElement('div');
+wordDiv.textContent = 'привет'; // Пока тестовое слово
+wordDiv.style.color = 'white';
+wordDiv.style.fontSize = '30px';
+wordDiv.style.fontWeight = 'bold';
+wordDiv.style.textShadow = '2px 2px 4px rgba(0,0,0,0.8)'; // Тень для читаемости
+const wordLabel = new CSS2DObject(wordDiv);
+wordLabel.position.set(0, 1, 0); // Поднимаем текст на 1 единицу вверх (над кубом)
+enemy.add(wordLabel);
 
 function animate() {
   requestAnimationFrame(animate);
-
+  labelRenderer.render(scene, camera);
 // Если враг еще не дошел до базы (база на Z=5, остановим его на Z=2)
-if (enemy.position.z < 2) {
+  if (enemy.position.z < 2) {
   enemy.position.z += 0.02;
-}
+  }
 
   renderer.render(scene, camera);
 }
