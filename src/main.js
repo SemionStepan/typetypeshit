@@ -76,7 +76,8 @@ enemy.position.set(0, 0.5, -15); // Ставим ровно в точку спа
 scene.add(enemy);
 // Создаем HTML-элемент для текста
 const wordDiv = document.createElement('div');
-wordDiv.textContent = 'привет'; // Пока тестовое слово
+const enemyWord = 'привет'; // Запоминаем слово
+wordDiv.textContent = enemyWord; // Показываем его над врагом
 wordDiv.style.color = 'white';
 wordDiv.style.fontSize = '30px';
 wordDiv.style.fontWeight = 'bold';
@@ -84,16 +85,56 @@ wordDiv.style.textShadow = '2px 2px 4px rgba(0,0,0,0.8)'; // Тень для ч�
 const wordLabel = new CSS2DObject(wordDiv);
 wordLabel.position.set(0, 1, 0); // Поднимаем текст на 1 единицу вверх (над кубом)
 enemy.add(wordLabel);
+// Создаем HTML-элемент для отображения того, что мы печатаем
+const inputDisplay = document.createElement('div');
+inputDisplay.style.position = 'absolute';
+inputDisplay.style.bottom = '40px';
+inputDisplay.style.left = '50%';
+inputDisplay.style.transform = 'translateX(-50%)';
+inputDisplay.style.color = '#00ff00'; // Зеленый, как база
+inputDisplay.style.fontSize = '50px';
+inputDisplay.style.fontFamily = 'monospace';
+inputDisplay.style.textShadow = '2px 2px 4px rgba(0,0,0,0.8)';
+document.body.appendChild(inputDisplay);
 
 function animate() {
   requestAnimationFrame(animate);
   labelRenderer.render(scene, camera);
 // Если враг еще не дошел до базы (база на Z=5, остановим его на Z=2)
-  if (enemy.position.z < 2) {
+  // Двигаем, только если враг существует в сцене (enemy.parent не null)
+if (enemy.parent && enemy.position.z < 2) {
   enemy.position.z += 0.02;
-  }
+}
 
   renderer.render(scene, camera);
 }
 
 animate();
+let currentInput = ''; // Здесь храним то, что напечатал игрок
+
+// Слушаем нажатия клавиш на всей странице
+window.addEventListener('keydown', (event) => {
+  // Если нажата обычная буква (длина символа равна 1)
+  if (event.key.length === 1) {
+    currentInput += event.key; // Добавляем букву к нашему вводу
+  } 
+  // Если нажат Backspace (удаление)
+  else if (event.key === 'Backspace') {
+    currentInput = currentInput.slice(0, -1); // Удаляем последнюю букву
+  }
+
+  // Показываем введенный текст на экране
+  inputDisplay.textContent = currentInput;
+
+  // ПРОВЕРКА: совпадает ли введенное слово с тем, что над врагом?
+  if (currentInput === enemyWord) {
+    console.log('БАХ! ВРАГ УНИЧТОЖЕН!');
+    
+    // Убираем врага из сцены
+    scene.remove(enemy); 
+    
+    // Очищаем ввод
+    currentInput = '';
+    inputDisplay.textContent = '';
+  }
+});
